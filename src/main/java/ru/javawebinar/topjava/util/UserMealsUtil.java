@@ -3,6 +3,7 @@ package ru.javawebinar.topjava.util;
 import ru.javawebinar.topjava.model.UserMeal;
 import ru.javawebinar.topjava.model.UserMealWithExcess;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
@@ -35,31 +36,18 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with excess. Implement by cycles
+        Map<LocalDate, Integer> caloriesSumByDate = new HashMap<>();
+        meals.forEach(meal -> {
+            LocalDate date = meal.getDateTime().toLocalDate();
+            caloriesSumByDate.merge(date, meal.getCalories(), Integer::sum);
+        });
         List<UserMealWithExcess> mealsWithExcess = new ArrayList<>();
-        Map<Integer, List<UserMeal>> mealsTable = new HashMap<>();
-        for (UserMeal meal : meals) {
-            int day = meal.getDateTime().getDayOfMonth();
-            if (!mealsTable.containsKey(day)) {
-                mealsTable.put(day, new ArrayList<>());
+        meals.forEach(meal -> {
+            if (TimeUtil.isBetweenHalfOpen(meal.getDateTime().toLocalTime(), startTime, endTime)) {
+                LocalDate date = meal.getDateTime().toLocalDate();
+                mealsWithExcess.add(toUserMealWithExcess(meal, caloriesSumByDate.get(date) > caloriesPerDay));
             }
-            mealsTable.get(day).add(meal);
-        }
-        for (List<UserMeal> value : mealsTable.values()) {
-            int calories = 0;
-            boolean excess = false;
-            for (UserMeal userMeal : value) {
-                calories += userMeal.getCalories();
-            }
-            if (calories > caloriesPerDay) {
-                excess = true;
-            }
-            for (UserMeal userMeal : value) {
-                if (TimeUtil.isBetweenHalfOpen(userMeal.getDateTime().toLocalTime(), startTime, endTime)) {
-                    mealsWithExcess.add(toUserMealWithExcess(userMeal, excess));
-                }
-            }
-        }
+        });
         return mealsWithExcess;
     }
 
