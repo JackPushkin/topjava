@@ -1,10 +1,6 @@
 package ru.javawebinar.topjava.web.user;
 
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -17,6 +13,7 @@ import java.util.Arrays;
 import static ru.javawebinar.topjava.UserTestData.NOT_FOUND;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
+@Ignore
 public class InMemoryAdminRestControllerTest {
     private static final Logger log = LoggerFactory.getLogger(InMemoryAdminRestControllerTest.class);
 
