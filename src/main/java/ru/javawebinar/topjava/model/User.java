@@ -14,6 +14,7 @@ import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 
 @NamedQueries({
         @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id=:id"),
+        @NamedQuery(name = User.SELECT, query = "SELECT u FROM User u WHERE u.id=:id"),
         @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
         @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email"),
 })
@@ -21,6 +22,7 @@ import static ru.javawebinar.topjava.util.MealsUtil.DEFAULT_CALORIES_PER_DAY;
 @Table(name = "users")
 public class User extends AbstractNamedEntity {
 
+    public static final String SELECT = "User.select";
     public static final String DELETE = "User.delete";
     public static final String BY_EMAIL = "User.getByEmail";
     public static final String ALL_SORTED = "User.getAllSorted";
